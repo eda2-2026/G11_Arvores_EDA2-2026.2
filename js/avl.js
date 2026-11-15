@@ -208,8 +208,76 @@ export class ArvoreAVL {
     return mapear(this.raiz);
   }
 
-  remover() {
-    return false;
+  remover(isbn) {
+    this.registroRotacao = null;
+    this.rotacoesDaOperacao = 0;
+
+    const chave = Number(isbn);
+
+    if (!Number.isFinite(chave)) {
+      return false;
+    }
+
+    const resultado = this._remover(this.raiz, chave);
+    this.raiz = resultado.no;
+
+    if (resultado.removido) {
+      this.quantidade -= 1;
+    }
+
+    return resultado.removido;
+  }
+
+  _remover(no, chave) {
+    if (!no) {
+      return { no: null, removido: false };
+    }
+
+    if (chave < no.chave) {
+      const resultado = this._remover(no.esquerda, chave);
+      no.esquerda = resultado.no;
+
+      if (!resultado.removido) {
+        return { no, removido: false };
+      }
+    } else if (chave > no.chave) {
+      const resultado = this._remover(no.direita, chave);
+      no.direita = resultado.no;
+
+      if (!resultado.removido) {
+        return { no, removido: false };
+      }
+    } else {
+      if (!no.esquerda && !no.direita) {
+        return { no: null, removido: true };
+      }
+
+      if (!no.esquerda) {
+        return { no: no.direita, removido: true };
+      }
+
+      if (!no.direita) {
+        return { no: no.esquerda, removido: true };
+      }
+
+      const sucessor = this._minimo(no.direita);
+      no.chave = sucessor.chave;
+      no.valor = sucessor.valor;
+      const resultado = this._remover(no.direita, sucessor.chave);
+      no.direita = resultado.no;
+    }
+
+    return { no: this._rebalancear(no), removido: true };
+  }
+
+  _minimo(no) {
+    let atual = no;
+
+    while (atual.esquerda) {
+      atual = atual.esquerda;
+    }
+
+    return atual;
   }
 
   intervalo() {

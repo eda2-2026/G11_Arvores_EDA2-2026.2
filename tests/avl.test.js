@@ -158,3 +158,77 @@ test("limpar esvazia a árvore", () => {
   assert.equal(arvore.altura, 0);
   assert.equal(arvore.snapshot(), null);
 });
+
+test("remoção de folha mantém a ordem e as invariantes", () => {
+  const arvore = new ArvoreAVL();
+  inserirSequencia(arvore, [50, 30, 70, 20, 40, 60, 80]);
+
+  assert.equal(arvore.remover(20), true);
+  assert.equal(arvore.tamanho, 6);
+  assert.deepEqual(
+    arvore.emOrdem().map((item) => item.isbn),
+    [30, 40, 50, 60, 70, 80],
+  );
+  verificarInvariantes(arvore.snapshot());
+});
+
+test("remoção de nó com um filho promove o filho", () => {
+  const arvore = new ArvoreAVL();
+  inserirSequencia(arvore, [50, 30, 70, 20]);
+
+  assert.equal(arvore.remover(30), true);
+  assert.deepEqual(
+    arvore.emOrdem().map((item) => item.isbn),
+    [20, 50, 70],
+  );
+  verificarInvariantes(arvore.snapshot());
+});
+
+test("remoção de nó com dois filhos usa o sucessor", () => {
+  const arvore = new ArvoreAVL();
+  inserirSequencia(arvore, [50, 30, 70, 20, 40, 60, 80]);
+
+  assert.equal(arvore.remover(30), true);
+  assert.deepEqual(
+    arvore.emOrdem().map((item) => item.isbn),
+    [20, 40, 50, 60, 70, 80],
+  );
+  verificarInvariantes(arvore.snapshot());
+});
+
+test("remoção da raiz mantém a árvore balanceada", () => {
+  const arvore = new ArvoreAVL();
+  inserirSequencia(arvore, [50, 30, 70, 20, 40, 60, 80]);
+
+  assert.equal(arvore.remover(50), true);
+  assert.deepEqual(
+    arvore.emOrdem().map((item) => item.isbn),
+    [20, 30, 40, 60, 70, 80],
+  );
+  assert.notEqual(arvore.snapshot().isbn, 50);
+  verificarInvariantes(arvore.snapshot());
+});
+
+test("remover ISBN inexistente não altera a árvore", () => {
+  const arvore = new ArvoreAVL();
+  inserirSequencia(arvore, [50, 30, 70]);
+
+  assert.equal(arvore.remover(999), false);
+  assert.equal(arvore.tamanho, 3);
+  verificarInvariantes(arvore.snapshot());
+});
+
+test("remover todos os livros esvazia a árvore", () => {
+  const arvore = new ArvoreAVL();
+  const isbns = Array.from({ length: 15 }, (_, indice) => indice + 1);
+  inserirSequencia(arvore, isbns);
+
+  for (const isbn of isbns) {
+    assert.equal(arvore.remover(isbn), true);
+    verificarInvariantes(arvore.snapshot());
+  }
+
+  assert.equal(arvore.tamanho, 0);
+  assert.equal(arvore.altura, 0);
+  assert.equal(arvore.snapshot(), null);
+});
