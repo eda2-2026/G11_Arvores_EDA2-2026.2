@@ -278,3 +278,48 @@ test("intervalo no acervo de exemplo devolve os livros da faixa", () => {
     esperado,
   );
 });
+
+function criarRng(seed) {
+  let estado = seed >>> 0;
+
+  return () => {
+    estado = (estado * 1664525 + 1013904223) >>> 0;
+    return estado / 4294967296;
+  };
+}
+
+test("operações aleatórias mantêm a árvore consistente", () => {
+  const aleatorio = criarRng(42);
+  const arvore = new ArvoreAVL();
+  const modelo = new Map();
+
+  for (let passo = 0; passo < 300; passo += 1) {
+    const chave = 1000 + Math.floor(aleatorio() * 200);
+    const sorteio = aleatorio();
+
+    if (sorteio < 0.55) {
+      const item = livro(chave);
+      const jaExistia = modelo.has(chave);
+      const resultado = arvore.inserir(item);
+
+      assert.equal(resultado.inserido, !jaExistia);
+
+      if (!jaExistia) {
+        modelo.set(chave, item);
+      }
+    } else if (sorteio < 0.8) {
+      const existia = modelo.delete(chave);
+      assert.equal(arvore.remover(chave), existia);
+    } else {
+      const { livro: encontrado } = arvore.buscar(chave);
+      assert.equal(encontrado, modelo.get(chave) ?? null);
+    }
+
+    assert.equal(arvore.tamanho, modelo.size);
+    assert.deepEqual(
+      arvore.emOrdem().map((item) => item.isbn),
+      [...modelo.keys()].sort((a, b) => a - b),
+    );
+    verificarInvariantes(arvore.snapshot());
+  }
+});
