@@ -232,3 +232,49 @@ test("remover todos os livros esvazia a árvore", () => {
   assert.equal(arvore.altura, 0);
   assert.equal(arvore.snapshot(), null);
 });
+
+test("intervalo de ISBN é inclusivo e em ordem", () => {
+  const arvore = new ArvoreAVL();
+  inserirSequencia(arvore, [10, 20, 30, 40, 50]);
+
+  assert.deepEqual(
+    arvore.intervalo(20, 40).map((item) => item.isbn),
+    [20, 30, 40],
+  );
+  assert.deepEqual(
+    arvore.intervalo(30, 30).map((item) => item.isbn),
+    [30],
+  );
+});
+
+test("intervalo vazio, fora da faixa ou invertido devolve lista vazia", () => {
+  const arvore = new ArvoreAVL();
+  assert.deepEqual(arvore.intervalo(10, 20), []);
+
+  inserirSequencia(arvore, [10, 20, 30]);
+
+  assert.deepEqual(arvore.intervalo(100, 200), []);
+  assert.deepEqual(arvore.intervalo(30, 10), []);
+});
+
+test("intervalo no acervo de exemplo devolve os livros da faixa", () => {
+  const arvore = new ArvoreAVL();
+  const acervo = criarAcervoExemplo();
+
+  for (const item of acervo) {
+    arvore.inserir(item);
+  }
+
+  const minimo = 9788508040000;
+  const maximo = 9788508049999;
+  const esperado = acervo
+    .filter((item) => item.isbn >= minimo && item.isbn <= maximo)
+    .map((item) => item.isbn)
+    .sort((a, b) => a - b);
+
+  assert.ok(esperado.length >= 2);
+  assert.deepEqual(
+    arvore.intervalo(minimo, maximo).map((item) => item.isbn),
+    esperado,
+  );
+});

@@ -280,8 +280,36 @@ export class ArvoreAVL {
     return atual;
   }
 
-  intervalo() {
-    return [];
+  intervalo(min, max) {
+    const de = Number(min);
+    const ate = Number(max);
+
+    if (!Number.isFinite(de) || !Number.isFinite(ate) || de > ate) {
+      return [];
+    }
+
+    const livros = [];
+
+    const percorrer = (no) => {
+      if (!no) {
+        return;
+      }
+
+      if (no.chave > de) {
+        percorrer(no.esquerda);
+      }
+
+      if (no.chave >= de && no.chave <= ate) {
+        livros.push(no.valor);
+      }
+
+      if (no.chave < ate) {
+        percorrer(no.direita);
+      }
+    };
+
+    percorrer(this.raiz);
+    return livros;
   }
 
   limpar() {
