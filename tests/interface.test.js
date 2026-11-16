@@ -82,6 +82,7 @@ test("rejeita entrada inválida e ISBN duplicado", () => {
   assert.equal(arvore.tamanho, 12);
   assert.equal(documento.getElementById("mensagem").classList.contains("erro"), true);
   assert.match(documento.getElementById("mensagem").textContent, /Título e autor/);
+  assert.equal(elementosSVG(documento, "g").length, 12);
 
   preencher(documento, {
     "cadastro-isbn": LIVROS_EXEMPLO[0].isbn,
@@ -93,6 +94,40 @@ test("rejeita entrada inválida e ISBN duplicado", () => {
 
   assert.equal(arvore.tamanho, 12);
   assert.match(documento.getElementById("mensagem").textContent, /Já existe/);
+  assert.equal(elementosSVG(documento, "g").length, 12);
+});
+
+test("atualiza o SVG após cadastro, rotação e remoção", () => {
+  const { documento, arvore } = iniciar();
+  const livros = [
+    { isbn: 9780000000001, titulo: "Livro baixo um" },
+    { isbn: 9780000000002, titulo: "Livro baixo dois" },
+  ];
+
+  for (const livro of livros) {
+    preencher(documento, {
+      "cadastro-isbn": livro.isbn,
+      "cadastro-titulo": livro.titulo,
+      "cadastro-autor": "Autora",
+      "cadastro-ano": 2024,
+    });
+    enviar(documento, "cadastrar-form");
+  }
+
+  let nos = elementosSVG(documento, "g");
+  assert.equal(arvore.tamanho, 14);
+  assert.equal(nos.length, 14);
+  assert.equal(arvore.ultimaRotacao.tipo, "LR");
+  assert.match(documento.getElementById("rotacao-info").textContent, /LR/);
+  assert.equal(nos.filter((no) => no.classList.contains("no-rotacao")).length, 3);
+
+  preencher(documento, { "remover-isbn": livros[1].isbn });
+  enviar(documento, "remover-form");
+
+  nos = elementosSVG(documento, "g");
+  assert.equal(arvore.tamanho, 13);
+  assert.equal(nos.length, 13);
+  assert.equal(nos.some((no) => no.attributes["data-isbn"] === String(livros[1].isbn)), false);
 });
 
 test("busca destaca caminho e informa quando o livro não existe", () => {
