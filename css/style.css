@@ -281,6 +281,11 @@ dd {
   stroke-width: 2;
 }
 
+#arvore-svg .aresta-caminho {
+  stroke: var(--cor-destaque);
+  stroke-width: 4;
+}
+
 #arvore-svg .no-arvore circle,
 #arvore-svg circle {
   fill: #e8f3ed;
@@ -293,6 +298,15 @@ dd {
   font-family: inherit;
   font-size: 13px;
   text-anchor: middle;
+}
+
+#arvore-svg .isbn {
+  font-size: 9px;
+  font-weight: 700;
+}
+
+#arvore-svg .titulo-no {
+  font-size: 10px;
 }
 
 #arvore-svg .no-caminho circle,
@@ -308,6 +322,11 @@ dd {
   fill: #f8d3ca;
   stroke: #bf513d;
   stroke-width: 3;
+}
+
+#arvore-svg .mensagem-vazia {
+  fill: #657587;
+  font-size: 1rem;
 }
 
 .tabela-container {
