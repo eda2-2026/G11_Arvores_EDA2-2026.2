@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta
+      name="description"
+      content="Gerencie um catálogo de livros organizado por uma árvore AVL indexada por ISBN."
+    >
+    <title>Biblioteca AVL</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script type="module" src="js/app.js"></script>
+  </head>
+  <body>
+    <header>
+      <h1>Biblioteca AVL</h1>
+      <p>Gerencie livros e explore a árvore balanceada por ISBN.</p>
+    </header>
+
+    <main>
+      <section aria-labelledby="operacoes-titulo">
+        <h2 id="operacoes-titulo">Operações do catálogo</h2>
+
+        <form id="cadastrar-form">
+          <h3>Cadastrar livro</h3>
+          <label for="cadastro-isbn">ISBN</label>
+          <input id="cadastro-isbn" name="isbn" type="number" step="1" required>
+
+          <label for="cadastro-titulo">Título</label>
+          <input id="cadastro-titulo" name="titulo" type="text" required>
+
+          <label for="cadastro-autor">Autor</label>
+          <input id="cadastro-autor" name="autor" type="text" required>
+
+          <label for="cadastro-ano">Ano</label>
+          <input id="cadastro-ano" name="ano" type="number" step="1" required>
+
+          <button type="submit">Cadastrar</button>
+        </form>
+
+        <form id="remover-form">
+          <h3>Remover livro</h3>
+          <label for="remover-isbn">ISBN do livro</label>
+          <input id="remover-isbn" name="isbn" type="number" step="1" required>
+          <button type="submit">Remover</button>
+        </form>
+
+        <form id="buscar-form">
+          <h3>Buscar por ISBN</h3>
+          <label for="buscar-isbn">ISBN do livro</label>
+          <input id="buscar-isbn" name="isbn" type="number" step="1" required>
+          <button type="submit">Buscar</button>
+          <div id="buscar-resultado" aria-live="polite"></div>
+        </form>
+
+        <form id="intervalo-form">
+          <h3>Consultar intervalo de ISBN</h3>
+          <label for="intervalo-min">ISBN inicial</label>
+          <input id="intervalo-min" name="min" type="number" step="1" required>
+
+          <label for="intervalo-max">ISBN final</label>
+          <input id="intervalo-max" name="max" type="number" step="1" required>
+
+          <button type="submit">Consultar intervalo</button>
+          <div id="intervalo-resultado" aria-live="polite"></div>
+        </form>
+
+        <p id="mensagem" role="status" aria-live="polite"></p>
+      </section>
+
+      <section aria-labelledby="metricas-titulo">
+        <h2 id="metricas-titulo">Métricas da árvore</h2>
+        <dl>
+          <div>
+            <dt>Livros</dt>
+            <dd id="metricas-nos">0</dd>
+          </div>
+          <div>
+            <dt>Altura</dt>
+            <dd id="metricas-altura">0</dd>
+          </div>
+          <div>
+            <dt>Rotações</dt>
+            <dd id="metricas-rotacoes">0</dd>
+          </div>
+        </dl>
+        <p id="rotacao-info" aria-live="polite">Nenhuma rotação registrada.</p>
+      </section>
+
+      <section aria-labelledby="arvore-titulo">
+        <h2 id="arvore-titulo">Visualização da árvore</h2>
+        <div id="arvore-container">
+          <svg
+            id="arvore-svg"
+            role="img"
+            aria-label="Visualização da árvore AVL"
+            viewBox="0 0 800 400"
+          ></svg>
+        </div>
+      </section>
+
+      <section aria-labelledby="catalogo-titulo">
+        <h2 id="catalogo-titulo">Catálogo em ordem alfabética</h2>
+        <div class="tabela-container">
+          <table>
+            <thead>
+              <tr>
+                <th scope="col">Título</th>
+                <th scope="col">Autor</th>
+                <th scope="col">Ano</th>
+                <th scope="col">ISBN</th>
+              </tr>
+            </thead>
+            <tbody id="catalogo-lista"></tbody>
+          </table>
+        </div>
+        <p id="catalogo-vazio">Nenhum livro no catálogo.</p>
+      </section>
+    </main>
+  </body>
+</html>
