@@ -12,14 +12,17 @@ com as rotações destacadas.
 
 Tudo roda no navegador, sem backend e sem dependências.
 
+## Screenshot
+
+![Print do site](assets/print.png)
+
 ## Site
 
-Acesse [aqui](https://eda2-2026.github.io/G11_Arvores_EDA2-2026.2/) — habilite o GitHub Pages na
-branch `main` (raiz) para publicar.
+Acesse [aqui](https://eda2-2026.github.io/G11_Arvores_EDA2-2026.2/).
 
 ## Vídeo
 
-Assista à apresentação [aqui](https://youtube.com) — link a definir.
+Assista à apresentação [aqui](https://youtu.be/xWagYmGd2Us).
 
 ## Funcionalidades
 
@@ -72,6 +75,8 @@ ordenados por título com `localeCompare("pt-BR")`.
 ├── index.html
 ├── package.json
 ├── .gitignore
+├── assets/
+│   └── print.png
 ├── css/
 │   └── style.css
 ├── js/
